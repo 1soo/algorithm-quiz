@@ -3,28 +3,26 @@ package practice.ch04.p_02;
 import java.util.*;
 
 public class Main {
-    public static char solution(int n, String str) {
-        int[] arr = new int[5];
-        for(char c : str.toCharArray()) {
-            arr[c - 'A']++;
+    public static String solution(String str1, String str2) {
+        Map<Character, Integer> map = new HashMap<>();
+        
+        for(int i = 0; i < str1.length(); i++) {
+            map.put(str1.charAt(i), map.getOrDefault(str1.charAt(i), 0) + 1);
+            map.put(str2.charAt(i), map.getOrDefault(str2.charAt(i), 0) - 1);
+        }
+        
+        for(char c : map.keySet()) {
+            if(map.get(c) != 0) return "NO";
         }
 
-        int max = 0, idx = 0;
-        for(int i = 0; i < 5; i++) {
-            if(arr[i] > max) {
-                max = arr[i];
-                idx = i;
-            }
-        }
-
-        return (char)('A' + idx);
+        return "YES";
     }
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        int n = in.nextInt();
-        String str = in.next();
+        String str1 = in.next();
+        String str2 = in.next();
 
-        System.out.print(solution(n, str));
+        System.out.print(solution(str1, str2));
     }
 }
