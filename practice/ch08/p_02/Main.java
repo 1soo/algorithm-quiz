@@ -3,28 +3,28 @@ package practice.ch08.p_02;
 import java.util.*;
 
 public class Main {
-    public static int dfs(int c, int n, int[] arr, int idx, int sum) {
-        if(idx == n) return sum;
+    static int c, n;
+    static int[] arr;
 
-        if(sum + arr[idx] <= c) return Math.max(dfs(c, n, arr, idx + 1, sum + arr[idx]), dfs(c, n, arr, idx + 1, sum));
-        else return dfs(c, n, arr, idx + 1, sum);
-    }
+    public static int dfs(int idx, int sum) {
+        if (sum > c)
+            return 0;
+        if (idx == n)
+            return sum;
 
-    public static int solution(int c, int n, int[] arr) {
-        return dfs(c, n, arr, 0, 0);
+        return Math.max(dfs(idx + 1, sum + arr[idx]), dfs(idx + 1, sum));
     }
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        
-        int c = in.nextInt();
-        int n = in.nextInt();
-        int[] arr = new int[n];
+        c = in.nextInt();
+        n = in.nextInt();
+        arr = new int[n];
 
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             arr[i] = in.nextInt();
         }
 
-        System.out.print(solution(c, n, arr));
+        System.out.println(dfs(0, 0));
     }
 }
