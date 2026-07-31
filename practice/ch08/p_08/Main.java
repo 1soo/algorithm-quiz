@@ -4,45 +4,50 @@ import java.util.*;
 
 public class Main {
     static int n, f;
-    static int[] arr, pm;
-    static boolean[] checked;
-    static List<String> answer = new ArrayList<>();
-    static List<String> candidates = new ArrayList<>();
+    static int[] arr;
+    static boolean[] flag;
 
-    public static int calculate() {
-        int[] result = pm.clone();
-        int len = result.length;
-        while (len > 1) {
-            int[] toChange = new int[len - 1];
-            for (int i = 0; i < len - 1; i++) {
-                toChange[i] = result[i] + result[i + 1];
-            }
-            result = toChange;
-            len = result.length;
-        }
+    static int[] comb;
+    static int[][] comb_cache;
 
-        return result[0];
-    }
+    static boolean finish;
 
-    public static void dfs(int len) {
+    static String answer;
+
+    public static void dfs(int len, int sum) {
+        if (finish)
+            return;
+
         if (len == n) {
-            if (calculate() == f) {
-                StringBuilder sb = new StringBuilder(n);
-                for (int num : pm) {
-                    sb.append(num).append(" ");
+            if (sum == f) {
+                StringBuilder sb = new StringBuilder(String.valueOf(arr[0]));
+                for (int i = 1; i < n; i++) {
+                    sb.append(" ").append(arr[i]);
                 }
-                answer.add(sb.toString());
+                answer = sb.toString();
+                finish = true;
             }
         } else {
             for (int i = 0; i < n; i++) {
-                if (!checked[i]) {
-                    checked[i] = true;
-                    pm[len] = arr[i];
-                    dfs(len + 1);
-                    checked[i] = false;
+                int value = sum + (i + 1) * comb[len];
+                if (!flag[i] && value <= f) {
+                    flag[i] = true;
+                    arr[len] = i + 1;
+                    dfs(len + 1, value);
+                    flag[i] = false;
                 }
             }
         }
+    }
+
+    public static int combination(int n, int r) {
+        if (comb_cache[n][r] > 0)
+            return comb_cache[n][r];
+
+        if (n == r || r == 0)
+            return 1;
+        else
+            return comb_cache[n][r] = combination(n - 1, r - 1) + combination(n - 1, r);
     }
 
     public static void main(String[] args) {
@@ -51,26 +56,17 @@ public class Main {
         f = in.nextInt();
 
         arr = new int[n];
-        pm = new int[n];
-        checked = new boolean[n];
+        flag = new boolean[n];
+
+        comb = new int[n];
+        comb_cache = new int[n][n];
 
         for (int i = 0; i < n; i++) {
-            arr[i] = i + 1;
+            comb[i] = combination(n - 1, i);
         }
 
-        dfs(0);
-        answer.sort((a, b) -> {
-            String[] a_split = a.split(" ");
-            String[] b_split = b.split(" ");
-            for (int i = 0; i < n; i++) {
-                int a_num = Integer.valueOf(a_split[i]);
-                int b_num = Integer.valueOf(b_split[i]);
-                if (a_num != b_num)
-                    return a_num - b_num;
-            }
+        dfs(0, 0);
 
-            return 0;
-        });
-        System.out.println(answer.get(0));
+        System.out.print(answer);
     }
 }
