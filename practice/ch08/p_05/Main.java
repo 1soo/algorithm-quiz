@@ -3,19 +3,20 @@ package practice.ch08.p_05;
 import java.util.*;
 
 public class Main {
-    static int n, m;
+    static int n, result = Integer.MAX_VALUE;
     static int[] arr;
 
-    public static int dfs(int sum, int cnt) {
-        if (sum == m)
-            return cnt;
-        else {
-            for (int i = n - 1; i >= 0; i--) {
-                if (sum + arr[i] <= m) {
-                    return dfs(sum + arr[i], cnt + 1);
-                }
+    public static void dfs(int mod, int cnt) {
+        for (int i = 0; i < n; i++) {
+            if (arr[i] <= mod) {
+                int tmp_mod = mod % arr[i];
+                int tmp_cnt = cnt + mod / arr[i];
+
+                if (tmp_mod == 0)
+                    result = Math.min(result, tmp_cnt);
+                else
+                    dfs(tmp_mod, tmp_cnt);
             }
-            return 0;
         }
     }
 
@@ -26,9 +27,8 @@ public class Main {
         for (int i = 0; i < n; i++) {
             arr[i] = in.nextInt();
         }
-        Arrays.sort(arr);
-        m = in.nextInt();
-
-        System.out.println(dfs(0, 0));
+        int m = in.nextInt();
+        dfs(m, 0);
+        System.out.println(result);
     }
 }
