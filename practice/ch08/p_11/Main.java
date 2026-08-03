@@ -3,41 +3,46 @@ package practice.ch08.p_11;
 import java.util.*;
 
 public class Main {
-    public static int solution(int n, int[][] arr) {
+    static int n;
+    static int[] dy = { -1, 0, 1, 0 }, dx = { 0, 1, 0, -1 };
+    static int[][] miro;
+
+    public static int bfs() {
         Queue<int[]> q = new LinkedList<>();
-        q.offer(new int[]{0, 0});
         int answer = 0;
-        
-        while(!q.isEmpty()) {
-            int len = q.size();
+        q.offer(new int[] { 0, 0 });
 
-            for(int i = 0; i < len; i++) {
-                int[] pos = q.poll();
-                if(pos[0] == n - 1 && pos[1] == n - 1) return answer;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                int[] point = q.poll();
 
-                arr[pos[0]][pos[1]] = 1;
-                if(pos[0] > 0 && arr[pos[0] - 1][pos[1]] != 1) q.offer(new int[]{pos[0] - 1, pos[1]});
-                if(pos[0] < n - 1 && arr[pos[0] + 1][pos[1]] != 1) q.offer(new int[]{pos[0] + 1, pos[1]});
-                if(pos[1] > 0 && arr[pos[0]][pos[1] - 1] != 1) q.offer(new int[]{pos[0], pos[1] - 1});
-                if(pos[1] < n - 1 && arr[pos[0]][pos[1] + 1] != 1) q.offer(new int[]{pos[0], pos[1] + 1});
+                for (int j = 0; j < 4; j++) {
+                    int py = point[0] + dy[j], px = point[1] + dx[j];
+                    if (py == n - 1 && px == n - 1)
+                        return answer + 1;
+                    else if (py >= 0 && px >= 0 && py < n && px < n && miro[py][px] == 0) {
+                        miro[py][px] = 2;
+                        q.offer(new int[] { py, px });
+                    }
+                }
             }
             answer++;
         }
 
         return -1;
     }
-    
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-
-        int n = 7;
-        int[][] arr = new int[n][n];
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < n; j++) {
-                arr[i][j] = in.nextInt();
+        n = 7;
+        miro = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                miro[i][j] = in.nextInt();
             }
         }
-        
-        System.out.println(solution(n, arr));
+        miro[0][0] = 1;
+        System.out.println(bfs());
     }
 }

@@ -12,7 +12,7 @@ public class Main {
 
     static boolean finish;
 
-    static String answer;
+    static StringBuilder answer;
 
     public static void dfs(int len, int sum) {
         if (finish)
@@ -20,11 +20,10 @@ public class Main {
 
         if (len == n) {
             if (sum == f) {
-                StringBuilder sb = new StringBuilder(String.valueOf(arr[0]));
+                answer = new StringBuilder(String.valueOf(arr[0]));
                 for (int i = 1; i < n; i++) {
-                    sb.append(" ").append(arr[i]);
+                    answer.append(" ").append(arr[i]);
                 }
-                answer = sb.toString();
                 finish = true;
             }
         } else {
@@ -67,6 +66,6 @@ public class Main {
 
         dfs(0, 0);
 
-        System.out.print(answer);
+        System.out.print(answer.toString());
     }
 }
