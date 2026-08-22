@@ -19,8 +19,7 @@ public class Main {
         }
 
         for(int i = 0; i < n; i++) {
-            dy[arr[i]] = 1;
-            for(int j = arr[i] + 1; j <= m; j++) {
+            for(int j = arr[i]; j <= m; j++) {
                 int val = dy[j - arr[i]] + 1;
                 if(val < dy[j]) dy[j] = val;
             }
